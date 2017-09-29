@@ -1,0 +1,30 @@
+version: '2.1'
+
+services:
+
+  mmost:
+    image: ${IMAGE}:${IMAGE_VER}
+    restart: always
+    networks:
+      - lan
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${APP_SITE}"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ../../data/mmost-conf:/mattermost/config
+      - ../../data/mmost:/mattermost/data
+      - ../../log/mmost:/mattermost/logs
+    environment:
+      - MM_CONFIG=/mattermost/config/config.json
+      - MM_DBNAME=${DB_USER}
+      - MM_USERNAME=${DB_USER}
+      - MM_PASSWORD=${DB_PASS}
+      - MM_SERVICESETTINGS_SITEURL=http://${APP_SITE}
+
+networks:
+  lan:
+    external:
+      name: ${DCAPE_NET}
+
