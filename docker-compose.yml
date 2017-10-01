@@ -15,7 +15,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ../../data/mmost-conf:/mattermost/config
       - ../../data/mmost:/mattermost/data
-      - ../../log/mmost:/mattermost/logs
+      - ../../log/mmost:/mattermost/log
     environment:
       - MM_CONFIG=/mattermost/config/config.json
       - MM_DBNAME=${DB_USER}
