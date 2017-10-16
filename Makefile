@@ -3,10 +3,14 @@
 SHELL               = /bin/bash
 CFG                ?= .env
 
-# Database name and database user name
-DB_USER            ?= mmost
+# Database name
+DB_NAME            ?= mmost
+# Database user name
+DB_USER            ?= $(DB_NAME)
 # Database user password
 DB_PASS            ?= $(shell < /dev/urandom tr -dc A-Za-z0-9 | head -c14; echo)
+# Database dump for import on create
+DB_SOURCE          ?=
 
 # Site host
 APP_SITE           ?= chat.dev.lan
@@ -32,10 +36,14 @@ define CONFIG_DEF
 # Site host
 APP_SITE=$(APP_SITE)
 
-# Database name and database user name
+# Database name
+DB_NAME=$(DB_NAME)
+# Database user name
 DB_USER=$(DB_USER)
 # Database user password
 DB_PASS=$(DB_PASS)
+# Database dump for import on create
+DB_SOURCE=$(DB_SOURCE)
 
 # Docker details
 
@@ -99,21 +107,44 @@ docker-wait:
 # ------------------------------------------------------------------------------
 # DB operations
 
-# create user, db and load sql
+# Database import script
+# DCAPE_DB_DUMP_DEST must be set in pg container
+
+define IMPORT_SCRIPT
+[[ "$$DCAPE_DB_DUMP_DEST" ]] || { echo "DCAPE_DB_DUMP_DEST not set. Exiting" ; exit 1 ; } ; \
+DB_NAME="$$1" ; DB_USER="$$2" ; DB_PASS="$$3" ; DB_SOURCE="$$4" ; \
+dbsrc=$$DCAPE_DB_DUMP_DEST/$$DB_SOURCE.tgz ; \
+if [ -f $$dbsrc ] ; then \
+  echo "Dump file $$dbsrc found, restoring database..." ; \
+  zcat $$dbsrc | PGPASSWORD=$$DB_PASS pg_restore -h localhost -U $$DB_USER -O -Ft -d $$DB_NAME || exit 1 ; \
+else \
+  echo "Dump file $$dbsrc not found" ; \
+  exit 2 ; \
+fi
+endef
+export IMPORT_SCRIPT
+
+# create user, db and load dump
 db-create: docker-wait
 	@echo "*** $@ ***" ; \
 	docker exec -i $$DCAPE_DB psql -U postgres -c "CREATE USER \"$$DB_USER\" WITH PASSWORD '$$DB_PASS';" || true ; \
-	docker exec -i $$DCAPE_DB psql -U postgres -c "CREATE DATABASE \"$$DB_USER\" OWNER \"$$DB_USER\";" || db_exists=1 ; \
-	docker exec -i $$DCAPE_DB psql -U postgres -d $$DB_USER -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;" || true ; \
+	docker exec -i $$DCAPE_DB psql -U postgres -c "CREATE DATABASE \"$$DB_NAME\" OWNER \"$$DB_USER\";" || db_exists=1 ; \
+	if [[ ! "$$db_exists" ]] ; then \
+	  if [[ "$$DB_SOURCE" ]] ; then \
+	    echo "$$IMPORT_SCRIPT" | docker exec -i $$DCAPE_DB bash -s - $$DB_NAME $$DB_USER $$DB_PASS $$DB_SOURCE \
+	    && docker exec -i $$DCAPE_DB psql -U postgres -c "COMMENT ON DATABASE \"$$DB_NAME\" IS 'SOURCE $$DB_SOURCE';" \
+	    || true ; \
+	  fi \
+	fi
 
 ## drop database and user
 db-drop: docker-wait
 	@echo "*** $@ ***"
-	@docker exec -it $$DCAPE_DB psql -U postgres -c "DROP DATABASE \"$$DB_USER\";" || true
+	@docker exec -it $$DCAPE_DB psql -U postgres -c "DROP DATABASE \"$$DB_NAME\";" || true
 	@docker exec -it $$DCAPE_DB psql -U postgres -c "DROP USER \"$$DB_USER\";" || true
 
 psql: docker-wait
-	@docker exec -it $$DCAPE_DB psql -U $$DB_USER
+	@docker exec -it $$DCAPE_DB psql -U $$DB_USER -d $$DB_NAME
 
 # ------------------------------------------------------------------------------
 
@@ -132,7 +163,7 @@ dc: docker-compose.yml
 # ------------------------------------------------------------------------------
 
 $(CFG):
-	@echo "$$CONFIG_DEF" > $@
+	@[ -f $@ ] || { echo "$$CONFIG_DEF" > $@ ; echo "Warning: Created default $@" ; }
 
 # ------------------------------------------------------------------------------
 
