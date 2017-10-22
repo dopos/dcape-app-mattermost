@@ -28,6 +28,8 @@ DCAPE_NET          ?= $(DCAPE_PROJECT_NAME)_default
 # dcape postgresql container name
 DCAPE_DB           ?= $(DCAPE_PROJECT_NAME)_db_1
 
+# Docker-compose image tag
+DC_VER             ?= 1.14.0
 
 define CONFIG_DEF
 # ------------------------------------------------------------------------------
@@ -64,7 +66,7 @@ export CONFIG_DEF
 -include $(CFG)
 export
 
-.PHONY: all $(CFG) setup start stop up reup down docker-wait db-create db-drop psql dc help
+.PHONY: all $(CFG) start start-hook stop update up reup down docker-wait db-create db-drop psql dc help
 
 all: help
 
@@ -156,7 +158,7 @@ dc: docker-compose.yml
 	  -v /var/run/docker.sock:/var/run/docker.sock \
 	  -v $$PWD:$$PWD \
 	  -w $$PWD \
-	  docker/compose:1.14.0 \
+	  docker/compose:$(DC_VER) \
 	  -p $$PROJECT_NAME \
 	  $(CMD)
 
