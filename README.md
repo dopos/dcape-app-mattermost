@@ -36,4 +36,3 @@ See also: [Deploy setup](https://github.com/dopos/dcape/blob/master/DEPLOY.md) (
 The MIT License (MIT), see [LICENSE](LICENSE).
 
 Copyright (c) 2017 Alexey Kovrizhkin <lekovr+dopos@gmail.com>
-
