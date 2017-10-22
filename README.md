@@ -8,7 +8,7 @@
 [4]: https://img.shields.io/github/license/dopos/dcape-app-mattermost.svg
 [5]: LICENSE
 
-[Mattermost](https://about.mattermost.com/) application package for [dcape](https://github/com/dopos/dcape).
+[Mattermost](https://about.mattermost.com/) application package for [dcape](https://github.com/dopos/dcape).
 
 ## Docker image used
 
