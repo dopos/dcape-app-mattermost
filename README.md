@@ -1,14 +1,39 @@
 # dcape-app-mattermost
 
-Mattermost application config for [dcape](https://github/com/dopos/dcape)
+[![GitHub Release][1]][2] [![GitHub code size in bytes][3]]() [![GitHub license][4]][5]
 
-Docker image used: [mattermost/mattermost-prod-app]
+[1]: https://img.shields.io/github/release/dopos/dcape-app-mattermost.svg
+[2]: https://github.com/dopos/dcape-app-mattermost/releases
+[3]: https://img.shields.io/github/languages/code-size/dopos/dcape-app-mattermost.svg
+[4]: https://img.shields.io/github/license/dopos/dcape-app-mattermost.svg
+[5]: LICENSE
+
+[Mattermost](https://about.mattermost.com/) application package for [dcape](https://github/com/dopos/dcape).
+
+## Docker image used
+
+* [mattermost/mattermost-prod-app](https://hub.docker.com/r/mattermost/mattermost-prod-app/)
+
+## Requirements
+
+* linux 64bit (git, make, wget, gawk, openssl)
+* [docker](http://docker.io)
+* [dcape](https://github.com/dopos/dcape)
+* Git service ([github](https://github.com), [gitea](https://gitea.io) or [gogs](https://gogs.io))
 
 ## Usage
 
-* Fork this repo
-* Setup deploy hooks
-* Save config to dcape
-* Run hook (app will be installed and started on all hook hosts)
+* Fork this repo in your Git service
+* Setup deploy hook
+* Run "Test delivery" (config sample will be created in dcape)
+* Edit and save config (enable deploy etc)
+* Run "Test delivery" again (app will be installed and started on webhook host)
 
+See also: [Deploy setup](https://github.com/dopos/dcape/blob/master/DEPLOY.md) (in Russian)
+
+## License
+
+The MIT License (MIT), see [LICENSE](LICENSE).
+
+Copyright (c) 2017 Alexey Kovrizhkin <lekovr+dopos@gmail.com>
 
