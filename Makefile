@@ -18,7 +18,7 @@ APP_SITE           ?= chat.dev.lan
 # Docker image name
 IMAGE              ?= mattermost/mattermost-prod-app
 # Docker image tag
-IMAGE_VER         ?= 4.2.0
+IMAGE_VER         ?= 5.1.1
 # Docker-compose project name (container name prefix)
 PROJECT_NAME       ?= mmost
 # dcape container name prefix
