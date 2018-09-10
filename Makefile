@@ -12,7 +12,7 @@ DB_PASS            ?= $(shell < /dev/urandom tr -dc A-Za-z0-9 | head -c14; echo)
 # Database dump for import on create
 DB_SOURCE          ?=
 
-#test push
+#test push 123
 
 # Site host
 APP_SITE           ?= chat.dev.lan
