@@ -14,6 +14,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ../../data/mmost-conf:/mattermost/config
       - ../../data/mmost:/mattermost/data
+      - ../../data/mmost-plugins:/mattermost/plugins
       - ../../log/mmost:/mattermost/log
     environment:
       - MM_CONFIG=/mattermost/config/config.json
