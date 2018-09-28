@@ -22,6 +22,8 @@ services:
       - MM_USERNAME=${DB_USER}
       - MM_PASSWORD=${DB_PASS}
       - MM_SERVICESETTINGS_SITEURL=http://${APP_SITE}
+    args:
+      - edition=team
 
 networks:
   lan:
