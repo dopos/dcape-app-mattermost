@@ -1,8 +1,10 @@
-version: "3.2"
+version: "2"
 services:
 
   mmost:
     image: ${IMAGE}:${IMAGE_VER}
+    args:
+      - edition=team
     restart: always
     networks:
       - lan
@@ -22,7 +24,6 @@ services:
       - MM_USERNAME=${DB_USER}
       - MM_PASSWORD=${DB_PASS}
       - MM_SERVICESETTINGS_SITEURL=http://${APP_SITE}
-    args:
       - edition=team
 
 networks:
