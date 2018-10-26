@@ -8,7 +8,8 @@ services:
       - lan
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.entryPoints=https"
+      - "traefik.frontend.entryPoints=${FRONT_ENTRY}"
+      - "traefik.frontend.redirect.entryPoints=${FRONT_REDIR}"
       - "traefik.frontend.rule=Host:${APP_SITE}"
     volumes:
       - /etc/timezone:/etc/timezone:ro
