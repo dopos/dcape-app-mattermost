@@ -43,7 +43,8 @@ define CONFIG_DEF
 APP_SITE=$(APP_SITE)
 # set to default frontend (http, if empty or "http"; https, if "https" value)
 FRONT_ENTRY=$(FRONT_ENTRY)
-# enable redirection, if default frontend is set to https (http, if empty or "http"; https, if "https" value)
+# enable redirection, if default frontend is set to https (without redirection,
+# if empty or "http"; redirection to https, if "https" value)
 FRONT_REDIR=$(FRONT_REDIR)
 
 # Database name
