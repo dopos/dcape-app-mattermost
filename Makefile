@@ -15,7 +15,7 @@ DB_SOURCE          ?=
 # Site host
 APP_SITE           ?= chat.dev.lan
 # set to frontend entrys list ("http", "https" or both "http,https")
-FRONT_ENTRYS	   ?= http
+FRONT_ENTRYS       ?= http
 # enable redirection, if frontend entry set only to https, set this var to "https"
 FRONT_REDIR        ?=
 
