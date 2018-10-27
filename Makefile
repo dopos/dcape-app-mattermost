@@ -14,10 +14,10 @@ DB_SOURCE          ?=
 
 # Site host
 APP_SITE           ?= chat.dev.lan
-# set to default frontend (http, if empty or "http"; https, if "https" value)
-FRONT_ENTRY		   ?= https
-# enable redirection, if default frontend is set to https (http, if empty or "http"; https, if "https" value)
-FRONT_REDIR        ?= https
+# set to frontend entrys list ("http", "https" or both "http,https")
+FRONT_ENTRYS	   ?= http
+# enable redirection, if frontend entry set only to https, set this var to "https"
+FRONT_REDIR        ?=
 
 # Docker image name
 IMAGE              ?= mattermost/mattermost-prod-app
@@ -41,10 +41,9 @@ define CONFIG_DEF
 
 # Site host
 APP_SITE=$(APP_SITE)
-# set to default frontend (http, if empty or "http"; https, if "https" value)
-FRONT_ENTRY=$(FRONT_ENTRY)
-# enable redirection, if default frontend is set to https (without redirection,
-# if empty or "http"; redirection to https, if "https" value)
+# set frontend
+FRONT_ENTRYS=$(FRONT_ENTRYS)
+# enable redirection
 FRONT_REDIR=$(FRONT_REDIR)
 
 # Database name
