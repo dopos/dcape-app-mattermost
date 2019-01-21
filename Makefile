@@ -54,6 +54,14 @@ IMAGE=$(IMAGE)
 # Docker image tag
 IMAGE_VER=$(IMAGE_VER)
 
+# Used by docker-compose
+# Docker-compose project name (container name prefix)
+PROJECT_NAME=$(PROJECT_NAME)
+# dcape network attach to
+DCAPE_NET=$(DCAPE_NET)
+# dcape postgresql container name
+DCAPE_DB=$(DCAPE_DB)
+
 endef
 export CONFIG_DEF
 
