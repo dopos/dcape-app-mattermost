@@ -33,7 +33,7 @@ DCAPE_NET          ?= $(DCAPE_PROJECT_NAME)_default
 DCAPE_DB           ?= $(DCAPE_PROJECT_NAME)_db_1
 
 # Docker-compose image tag
-DC_VER             ?= 1.14.2
+DC_VER             ?= 1.21.2
 
 define CONFIG_DEF
 # ------------------------------------------------------------------------------
@@ -42,9 +42,9 @@ define CONFIG_DEF
 # Site host
 APP_SITE=$(APP_SITE)
 # set frontend
-FRONT_ENTRYS=$(FRONT_ENTRYS)
+TRAEFIK_ENTRY_DEFAULT=$(TRAEFIK_ENTRY_DEFAULT)
 # enable redirection
-FRONT_REDIR=$(FRONT_REDIR)
+TRAEFIK_REDIRECT_ENTRYPOINTS=$(TRAEFIK_REDIRECT_ENTRYPOINTS)
 
 # Database name
 DB_NAME=$(DB_NAME)
