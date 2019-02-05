@@ -15,14 +15,14 @@ DB_SOURCE          ?=
 # Site host
 APP_SITE           ?= chat.dev.lan
 # set to frontend entrys list ("http", "https" or both "http,https")
-FRONT_ENTRYS       ?= http
+TRAEFIK_ENTRY_DEFAULT       		?= http
 # enable redirection, if frontend entry set only to https, set this var to "https"
-FRONT_REDIR        ?=
+TRAEFIK_REDIRECT_ENTRYPOINTS        ?=
 
 # Docker image name
 IMAGE              ?= mattermost/mattermost-prod-app
 # Docker image tag
-IMAGE_VER         ?= 5.3.1
+IMAGE_VER          ?= 5.6.4
 # Docker-compose project name (container name prefix)
 PROJECT_NAME       ?= mmost
 # dcape container name prefix
@@ -33,7 +33,7 @@ DCAPE_NET          ?= $(DCAPE_PROJECT_NAME)_default
 DCAPE_DB           ?= $(DCAPE_PROJECT_NAME)_db_1
 
 # Docker-compose image tag
-DC_VER             ?= 1.21.2
+DC_VER             ?= 1.14.2
 
 define CONFIG_DEF
 # ------------------------------------------------------------------------------
