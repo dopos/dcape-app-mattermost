@@ -14,11 +14,13 @@ DB_SOURCE          ?=
 
 # Site host
 APP_SITE           ?= chat.dev.lan
+# enable redirection, set https if frontend need work on TLS
+REDIR_ENTRY        ?=
 
 # Docker image name
 IMAGE              ?= mattermost/mattermost-prod-app
 # Docker image tag
-IMAGE_VER         ?= 5.3.1
+IMAGE_VER          ?= 5.6.4
 # Docker-compose project name (container name prefix)
 PROJECT_NAME       ?= $(shell basename $$PWD)
 # dcape container name prefix
@@ -37,6 +39,8 @@ define CONFIG_DEF
 
 # Site host
 APP_SITE=$(APP_SITE)
+# enable redirection
+REDIR_ENTRY=$(REDIR_ENTRY)
 
 # Database name
 DB_NAME=$(DB_NAME)
