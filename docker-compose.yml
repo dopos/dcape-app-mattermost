@@ -1,29 +1,20 @@
-version: "3.2"
-services:
+# custom app config
+# overrides DCAPE/apps/drone/dcape-app/docker-compose.yml
 
+version: '2'
+
+services:
   app:
-    image: ${IMAGE}:${IMAGE_VER}
-    restart: always
-    networks:
-      - lan
-    labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:${APP_SITE}"
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ../../data/mmost-conf:/mattermost/config
-      - ../../data/mmost:/mattermost/data
-      - ../../data/mmost-plugins:/mattermost/plugins
-      - ../../log/mmost:/mattermost/log
     environment:
       - MM_CONFIG=/mattermost/config/config.json
-      - MM_DBNAME=${DB_USER}
-      - MM_USERNAME=${DB_USER}
-      - MM_PASSWORD=${DB_PASS}
+      - DB_HOST=db
+      - MM_DBNAME=${PGDATABASE}
+      - MM_USERNAME=${PGUSER}
+      - MM_PASSWORD=${PGPASSWORD}
       - MM_SERVICESETTINGS_SITEURL=http://${APP_SITE}
-
-networks:
-  lan:
-    external:
-      name: ${DCAPE_NET}
+    volumes:
+      - ${DCAPE_ROOT}/mmost/config:/mattermost/config
+      - ${DCAPE_ROOT}/mmost/data:/mattermost/data
+      - ${DCAPE_ROOT}/mmost/plugins:/mattermost/plugins
+      - ${DCAPE_ROOT}/mmost/plugins-cl:/mattermost/client-plugins
+      - ${DCAPE_ROOT}/mmost/logs:/mattermost/logs
