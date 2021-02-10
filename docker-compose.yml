@@ -16,5 +16,5 @@ services:
       - ${DCAPE_ROOT}/mmost/config:/mattermost/config
       - ${DCAPE_ROOT}/mmost/data:/mattermost/data
       - ${DCAPE_ROOT}/mmost/plugins:/mattermost/plugins
-      - ${DCAPE_ROOT}/mmost/plugins-cl:/mattermost/client-plugins
+      - ${DCAPE_ROOT}/mmost/plugins-cl:/mattermost/client/plugins
       - ${DCAPE_ROOT}/mmost/logs:/mattermost/logs
