@@ -55,7 +55,7 @@ endif
 ## create and chown mattermost volumes
 mmost-dirs:
 	for f in config data plugins plugins-cl logs ; do mkdir -pv $(DCAPE_ROOT)/mmost/$$f ; done
-ifeq (true, $$DRONE)
+ifeq (true,$(DRONE))
 	chown -R 2000:2000 $(DCAPE_ROOT)/mmost/
 else
 	sudo chown -R 2000:2000 $(DCAPE_ROOT)/mmost/
