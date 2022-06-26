@@ -1,10 +1,9 @@
 # app custom Makefile
 
 # Docker repo & image name without version
-IMAGE    ?= mattermost/mattermost-prod-app
+IMAGE    ?= mattermost/mattermost-team-edition
 # Docker image version
-IMAGE_VER        ?= v5.30.1
-
+IMAGE_VER        ?= 7.0
 # Hostname for external access
 APP_SITE ?= chat.dev.lan
 # App names (db/user name etc)
