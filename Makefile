@@ -1,5 +1,5 @@
 # dcape-app-mattermost Makefile
-
+#
 SHELL               = /bin/bash
 CFG                ?= .env
 
@@ -27,7 +27,15 @@ DCAPE_PROJECT_NAME ?= dcape
 DCAPE_NET          ?= $(DCAPE_PROJECT_NAME)_default
 # dcape postgresql container name
 DCAPE_DB           ?= $(DCAPE_PROJECT_NAME)_db_1
-
+# Разрешение запуска очистки каналов
+CLEAN_ENABLED=no
+# Адрес эл.почты для отправки уведомлений cron
+EMAIL_ADMIN ="admin@localhost"
+# Правила очистки каналов: имя_канала1:промежуток_времени,имя_канала2:промежуток_времени
+# имя_канала1 - имя канала mattermost, промежуток_времени - 1 min, 3 days и т.д.
+CLEAN_RULES="channel-name1:1 min,channel-name2:4 days"
+# Время запуска скрипта в формате cron (по умолчанию каждое воскресенье в 0:00)
+CRON_SCHED="0 0 * * 7"
 # Docker-compose image tag
 DC_VER             ?= 1.23.2
 
@@ -37,7 +45,6 @@ define CONFIG_DEF
 
 # Site host
 APP_SITE=$(APP_SITE)
-
 # Database name
 DB_NAME=$(DB_NAME)
 # Database user name
@@ -46,9 +53,17 @@ DB_USER=$(DB_USER)
 DB_PASS=$(DB_PASS)
 # Database dump for import on create
 DB_SOURCE=$(DB_SOURCE)
+# Разрешение запуска очистки каналов
+CLEAN_ENABLED=$(CLEAN_ENABLED)
+# Адрес эл.почты для отправки уведомлений cron
+EMAIL_ADMIN=$(EMAIL_ADMIN)
+# Правила очистки каналов: имя_канала1:промежуток_времени,имя_канала2:промежуток_времени
+# имя_канала1 - имя канала mattermost, промежуток_времени - 1 min, 3 days и т.д.
+CLEAN_RULES=$(CLEAN_RULES)
+# Время запуска скрипта в формате cron
+CRON_SCHED=$(CRON_SCHED)
 
 # Docker details
-
 # Docker image name
 IMAGE=$(IMAGE)
 # Docker image tag
@@ -61,7 +76,6 @@ PROJECT_NAME=$(PROJECT_NAME)
 DCAPE_NET=$(DCAPE_NET)
 # dcape postgresql container name
 DCAPE_DB=$(DCAPE_DB)
-
 endef
 export CONFIG_DEF
 
@@ -75,9 +89,9 @@ all: help
 # ------------------------------------------------------------------------------
 # webhook commands
 
-start: db-create up
+start: db-create cron up
 
-start-hook: db-create reup
+start-hook: db-create cron reup
 
 stop: down
 
@@ -140,6 +154,28 @@ db-create: docker-wait
 	    || true ; \
 	  fi \
 	fi
+# Проверка наличия и создание расписания cron, скрипта очистки БД.
+cron:
+	@/bin/bash $$PWD/init.sh;
+
+## Проверка разрешения и выполнение скрипта очистки в контейнере БД.
+mmost-clean: checks
+	@if [ "$$CLEAN_ENABLED" = "yes" ] ; then \
+	  echo "Start cleaning." ;\
+	  cat ./mmost-clean.sql | docker exec -i $$DCAPE_DB psql -U postgres -d $$DB_NAME;\
+	else \
+	  echo "CLEAN_ENABLED is not equal 'yes'! Exit.";\
+	fi
+## Проверка наличия контейнера $DCAPE_DB
+checks:
+	@echo -n "Checking DB is ready...";\
+	if [ -z "$$(docker ps | grep $$DCAPE_DB)" ]; then echo "DB container not exist! Exit."; exit 1; fi
+	@check_dbname_exist=`docker exec -i $$DCAPE_DB psql -U postgres -l | grep -m 1 -w $$DB_NAME` ; \
+	if [[ ! $$check_dbname_exist ]] ; then echo "DB with name="$$DB_NAME" not exist on: "$$DCAPE_DB"."; exit 1; fi
+
+## Clean host system cron
+cleanup:
+	@[ -f /etc/cron.d/mmost-clean ] && rm /etc/cron.d/mmost-clean || true
 
 ## drop database and user
 db-drop: docker-wait
